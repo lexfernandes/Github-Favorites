@@ -102,22 +102,22 @@ table tr:nth-child(odd) {
 table tr:nth-child(even) {
   background: #eee;
 }
-td.users {
+td.user {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-td.users img {
+td.user img {
   width: 5rem;
   height: 5rem;
   object-fit: cover;
   border-radius: 50%;
 }
-td.users a {
+td.user a {
   text-decoration: none;
 }
-td.users a p {
+td.user a p {
   font-weight: bold;
 }
 td .remove {

@@ -3,6 +3,25 @@
 export class Favorites {
   constructor(root) {
     this.root = document.querySelector(root)
+    this.load()
+    this.tbody = this.root.querySelector("table tbody")
+  }
+
+  load() {
+    this.entries = [
+      {
+        login: "lexfernandes",
+        name: "Lex Fernandes",
+        public_repos: "76",
+        followers: "2000",
+      },
+      {
+        login: "maykbrito",
+        name: "Mayk Brito",
+        public_repos: "80",
+        followers: "1300",
+      },
+    ]
   }
 }
 //classe que vai criar a visualização e eventos do HTML
@@ -14,25 +33,24 @@ export class FavoritesView extends Favorites {
   // Função roda a função removeAllTr
   update() {
     this.removeAllTr()
-    [
-      {
-        login: "lexfernandes",
-        name: "Lex Fernandes",
-        public_repos: "76",
-        followers: "2000",
-      }
-      {
-        login: "maykbrito",
-        name: "Mayk Brito",
-        public_repos: "80",
-        followers: "1200",
-      }
-    ]
+    this.entries.forEach((user) => {
+      const row = this.createRow()
+      row.querySelector(".user img").src = `https://github.com/${user.login}.png`
+      row.querySelector('.user img').alt = `Imagem de ${user.name}`
+      row.querySelector(".user p").textContent = user.name
+      row.querySelector('.user span').textContent = user.login
+      row.querySelector('.repositories').textContent = user.public_repos
+      row.querySelector('.followers').textContent = user.followers
+
+
+      this.tbody.append(row)
+    })
   }
+
   createRow() {
     const tr = document.createElement("tr")
     tr.innerHTML = `
-            <td class="users">
+            <td class="user">
               <img
                 src="https://github.com/lexfernandes.png"
                 alt="Imagem do Alex"
@@ -43,7 +61,7 @@ export class FavoritesView extends Favorites {
               </a>
             </td>
             <td class="repositories">76</td>
-            <td class="Followers">9589</td>
+            <td class="followers">9589</td>
             <td><button class="remove">&times;</button></td>
           `
     return tr
@@ -51,8 +69,7 @@ export class FavoritesView extends Favorites {
 
   // remove a listagem ao atualizar a página.(Função)
   removeAllTr() {
-    const tbody = this.root.querySelector("table tbody")
-    tbody.querySelectorAll("tr").forEach((tr) => {
+    this.tbody.querySelectorAll("tr").forEach((tr) => {
       tr.remove()
     })
   }
