@@ -10,13 +10,13 @@ export class Favorites {
 export class FavoritesView extends Favorites {
   constructor(root) {
     super(root)
-    this.update
+    this.update()
   }
-
+  // Função roda a função removeAllTr
   update() {
     this.removeAllTr()
   }
-
+  // remove a listagem ao atualizar a página.(Função)
   removeAllTr() {
     const tbody = this.root.querySelector("table tbody")
     tbody.querySelectorAll("tr").forEach((tr) => {
