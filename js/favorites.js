@@ -1,9 +1,9 @@
 export class GithubUser {
-  static search (username) {
-    const endpoint = `https://api.github.com/users/${username}`
-    return fetch(endpoint)
-    .then( data => data.json())
-    .then(({ login, name, public_repos, followers}) => ({
+  static search (username) { // busca o username no api do github
+    const endpoint = `https://api.github.com/users/${username}` //coloca na variavel endpoint
+    return fetch(endpoint) // vá buscar a informação
+    .then( data => data.json()) // retorne os dados em JSON
+    .then(({ login, name, public_repos, followers}) => ({ // desistrituração pegue somenre os alguns dados
       login, 
       name,
       public_repos,
@@ -12,7 +12,6 @@ export class GithubUser {
       
     }
 }
-
 
 
 // classe que vai conter a lógica dos dados
