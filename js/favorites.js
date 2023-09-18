@@ -8,24 +8,15 @@ export class Favorites {
   }
 
   load() {
-    this.entries = [
-      {
-        login: "lexfernandes",
-        name: "Lex Fernandes",
-        public_repos: "76",
-        followers: "2000",
-      },
-      {
-        login: "maykbrito",
-        name: "Mayk Brito",
-        public_repos: "80",
-        followers: "1300",
-      },
-    ]
+    const entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
+    console.log(entries)
+    this.entries = []
   }
+  // cria um array e filtra o que será colocado dentro do array
   delete(user) {
     const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
-    console.log(filteredEntries)
+    this.entries = filteredEntries
+    this.update()
   }
 }
 //classe que vai criar a visualização e eventos do HTML
