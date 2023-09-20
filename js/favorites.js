@@ -2,25 +2,22 @@ export class GithubUser {
   static search (username) { // busca o username no api do github
     const endpoint = `https://api.github.com/users/${username}` //coloca na variavel endpoint
     return fetch(endpoint) // vá buscar a informação
-    .then( data => data.json()) // retorne os dados em JSON
-    .then(({ login, name, public_repos, followers}) => ({ // desistrituração pegue somenre os alguns dados
+    .then(data => data.json()) // retorne os dados em JSON
+    .then(({login, name, public_repos, followers}) => ({ // desistrituração pegue somenre os alguns dados
       login, 
       name,
       public_repos,
       followers
     }))
-      
     }
 }
-
 
 // classe que vai conter a lógica dos dados
 // como os dados serão estruturados
 export class Favorites {
   constructor(root) {
     this.root = document.querySelector(root)
-    this.load()
-    this.tbody = this.root.querySelector("table tbody")
+    this.load()  
   }
 
   load() {
@@ -28,6 +25,19 @@ export class Favorites {
     console.log(entries)
     this.entries = []
   }
+
+  async add(username){
+    try {
+      const user = await GithubUser.search(username)
+      
+      if(user.login === undefined){
+        throw new Error('usuário não encontrado !')
+      }
+    } catch (error){
+      alert(error.message)
+  }
+  }
+
   // cria um array e filtra o que será colocado dentro do array
   delete(user) {
     const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
@@ -39,7 +49,17 @@ export class Favorites {
 export class FavoritesView extends Favorites {
   constructor(root) {
     super(root)
+    this.tbody = this.root.querySelector("table tbody")
     this.update()
+    this.onadd()
+  }
+
+  onadd(){
+    const addButton = this.root.querySelector('.search button')
+    addButton.onclick = () => {
+      const { value } = this.root.querySelector('.search input')
+      this.add(value)
+    }
   }
   // Função roda a função removeAllTr
   update() {
@@ -58,7 +78,6 @@ export class FavoritesView extends Favorites {
           this.delete(user)
         }
       }
-
       this.tbody.append(row)
     })
   }
