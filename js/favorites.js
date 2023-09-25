@@ -26,38 +26,62 @@ export class Favorites {
     this.entries = []
   }
 
+  save(){
+    localStorage.setItem('@github-favorites:', JSON.stringify(this.entries))
+  }
+
+
   async add(username){
     try {
-      const user = await GithubUser.search(username)
+
+      const userExists = this.entries.find(entry => entry.login === username)
+
+      if(userExists) {
+        throw new Error('Usuário já cadastrado')
+      }
+
+
+      const user = await GithubUser.search(username)// await aguardando um promessa 
       
       if(user.login === undefined){
         throw new Error('usuário não encontrado !')
       }
-    } catch (error){
+
+      this.entries = [user, ...this.entries]
+      this.update()
+      this.save()
+
+    } catch(error) {
       alert(error.message)
   }
   }
 
   // cria um array e filtra o que será colocado dentro do array
   delete(user) {
-    const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
+    const filteredEntries = this.entries
+    .filter(entry => entry.login !== user.login)
+
     this.entries = filteredEntries
     this.update()
+    this.save()
   }
 }
 //classe que vai criar a visualização e eventos do HTML
 export class FavoritesView extends Favorites {
   constructor(root) {
     super(root)
+
     this.tbody = this.root.querySelector("table tbody")
+
     this.update()
+    
     this.onadd()
   }
 
   onadd(){
     const addButton = this.root.querySelector('.search button')
     addButton.onclick = () => {
-      const { value } = this.root.querySelector('.search input')
+      const { value } = this.root.querySelector('.search input') // desistruturando input, pegando somente o valor do input
       this.add(value)
     }
   }
@@ -73,15 +97,15 @@ export class FavoritesView extends Favorites {
       row.querySelector('.repositories').textContent = user.public_repos
       row.querySelector('.followers').textContent = user.followers
       row.querySelector('.remove').onclick = () => {
-        const isOk = confirm('Tem certeza que deseja deletar essa linha?')
+        const isOk = confirm('Tem certeza que deseja deletar essa linha?')//confirm retornar um boolean verdadeiro ou falso
         if(isOk){
           this.delete(user)
         }
       }
-      this.tbody.append(row)
+      this.tbody.append(row) // append serve para adicionar objeto dentro de uma array
     })
   }
-
+// cria uma estrutura html utilizando javascript
   createRow() {
     const tr = document.createElement("tr")
     tr.innerHTML = `
